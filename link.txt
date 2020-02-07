@@ -1,0 +1,1 @@
+https://api.smrzr.io/summarize?ratio=0.15
