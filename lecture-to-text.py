@@ -1,9 +1,22 @@
 import os
 import speech_recognition as sr
-from summarizer import Summarizer
+import requests
+import json
 
-
-model = Summarizer()
+headers = {
+        'Host': 'api.smrzr.io',
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:72.0) Gecko/20100101 Firefox/72.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://smrzr.io/',
+        'Content-Type': 'raw/text',
+        'Origin': 'https://smrzr.io',
+        'Content-Length': '838',
+        'Connection': 'keep-alive',
+        'TE': 'Trailers'
+}
+url = "https://api.smrzr.io/summarize?ratio=0.15"
 
 tomp3 = "ffmpeg -i /home/jasmeet/PycharmProjects/shikshak/video_lectures/Lecture2.webm /home/jasmeet/PycharmProjects/shikshak/video_lectures/Lecture1.mp3"
 towav = "ffmpeg -i /home/jasmeet/PycharmProjects/shikshak/video_lectures/Lecture1.mp3 /home/jasmeet/PycharmProjects/shikshak/video_lectures/Lecture1.wav"
@@ -23,11 +36,10 @@ try:
     text = r.recognize_google(audio)
     print(text)
     print("...speech-to-text done...")
-    print("...summarizing...")
-    summary = model(text, min_length=60)
-    final = ''.join(summary)
-    print("...summarized...\n")
-    print(final)
+    r = requests.post(url=url, headers=headers, data=json.dumps(text))
+    print(r)
+    print(r.text)
+
 
 except sr.UnknownValueError:
     print("Google Speech Recognition could not understand audio")
